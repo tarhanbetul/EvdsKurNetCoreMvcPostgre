@@ -1,0 +1,82 @@
+﻿
+@using PostgreSqlDotnetCore.Models.Evds;
+@model List<ExchangeRateInformation>;
+@{ 
+    var parabirimleri = ViewBag.ParaBirimleri as List<ParaBirimi>;
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <form method="post" asp-controller="ExchangeRate" asp-action="UpdateRates">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Currencies</label>
+                    <select class="selectpicker" name="currencies" id="currencies" multiple data-live-search="true">
+                        @foreach (var item in parabirimleri)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                   
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputPassword4">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" placeholder="Country" @*asp-for="Country"*@>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputAddress">End Date</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate" placeholder="Content" @*asp-for="Content"*@>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Güncelle</button>
+        </form>
+
+    </div>
+    </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-12" style="margin-bottom:10px">
+
+                    @*<div class="col-md-3" style="float:right;margin-bottom:10px"><a style="float:right" class="btn btn-success" asp-controller="Currency" asp-action="Create">New Currency</a></div>*@
+                </div>
+                <div class="col-md-12" style="margin-top: 46px;">
+
+                    <table class="table table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Currency Name</th>
+                                <th scope="col">Rate Date</th>
+                                <th scope="col">Currency Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <th scope="row">@item.Id</th>
+                                    <td>@item.CurrencyName</td>
+                                    <td>@item.RateDate</td>
+                                    <td>@item.CurrencyValue</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+<script>
+    $('select').selectpicker();
+</script>
+

@@ -1,0 +1,126 @@
+﻿
+@using PostgreSqlDotnetCore.Models.Evds;
+@model List<ExchangeRateInformation>;
+@{
+    var parabirimleri = ViewBag.ParaBirimleri as List<ParaBirimi>;
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+<h3>Current Exchange Rate</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+
+                <form method="post" asp-controller="ExchangeRate" asp-action="UpdateRates">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Currencies</label>
+                            <select class="selectpicker" name="currencies" id="currencies" onchange="setSelectedCurrency()">
+                                <option value="">Please Select</option>
+                                @foreach (var item in parabirimleri)
+                                {
+                                    <option value="@item.Name">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label id="selectedCurrencyText"></label>
+                            <input type="number" class="form-control" id="selectedCurrency" name="selectedCurrency" placeholder="Please Enter" onkeypress="calculate('selection')">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputAddress">TRY</label>
+                            <input type="number" class="form-control" id="TRY" name="TRY" placeholder="Please Enter" onkeypress="calculate('try')">
+                        </div>
+
+                    </div>
+                   
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-12" style="margin-bottom:10px">
+
+            @*<div class="col-md-3" style="float:right;margin-bottom:10px"><a style="float:right" class="btn btn-success" asp-controller="Currency" asp-action="Create">New Currency</a></div>*@
+        </div>
+        <div class="col-md-12" style="margin-top: 46px;">
+
+            <table class="table table-hover table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Currency Name</th>
+                        <th scope="col">Rate Date</th>
+                        <th scope="col">Currency Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th scope="row">@item.Id</th>
+                            <td>@item.CurrencyName</td>
+                            <td>@item.RateDate</td>
+                            <td>@item.CurrencyValue</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<script>
+    $('select').selectpicker();
+
+    function setSelectedCurrency() {
+
+        $("#selectedCurrencyText").text($("#currencies").val());
+    }
+    function calculate(value) {
+        console.log("tetiklendi1")
+        var json = @Html.Raw(Json.Serialize(@Model));
+
+        if (value == "try") {
+
+            console.log("tetiklenditry")
+            for (var i = 0; i < json.length; i++) {
+
+                if (json[i].currencyName == $("#currencies").val()) {
+                    $("#selectedCurrency").val($("#TRY").val() / json[i].currencyValue);
+
+                }
+            }
+
+        }
+        else {   
+            console.log("tetiklendibaska")
+            for (var i = 0; i < json.length; i++) {
+
+                if (json[i].currencyName == $("#currencies").val()) {
+                    $("#TRY").val($("#selectedCurrency").val() * json[i].currencyValue);
+
+                }
+            }
+        }
+
+
+    }
+</script>
+
